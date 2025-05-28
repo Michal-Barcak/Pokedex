@@ -1,0 +1,30 @@
+cat > .gitignore << 'EOF'
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Django
+*.log
+db.sqlite3
+local_settings.py
+
+# Environment variables
+.env
+
+# Virtual environment
+pokedex_env/
+venv/
+env/
+
+# VSCode
+.vscode/
+
+# Media files - ignore content, keep structure
+media/*
+!media/.gitkeep
+!media/*/.gitkeep
+
+# Pokebase cache
+pokebase_cache/
+EOF
