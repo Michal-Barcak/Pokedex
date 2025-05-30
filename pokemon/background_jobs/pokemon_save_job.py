@@ -44,7 +44,6 @@ def save_pokemon_to_db(pokemon_data: Dict[str, Any]) -> None:
             },
         )
         if created:
-            # Save types
             for type_data in pokemon_data["types"]:
                 type_obj, _ = PokemonType.objects.get_or_create(
                     name=type_data["type"]["name"],
@@ -56,7 +55,6 @@ def save_pokemon_to_db(pokemon_data: Dict[str, Any]) -> None:
                     pokemon=pokemon_obj, type=type_obj, slot=type_data["slot"]
                 )
 
-            # Save abilities
             for ability_data in pokemon_data["abilities"]:
                 PokemonAbility.objects.get_or_create(
                     pokemon=pokemon_obj,
