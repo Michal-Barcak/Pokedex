@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Pokémon Comparison</h1>
+    
+    <!-- Headers -->
+    <div class="row mb-4">
+        <div class="col-5 text-center">
+            <h2>{{ pokemon1.basic_info.name|title }}</h2>
+            <img src="{{ pokemon1.sprites.front_default }}" alt="{{ pokemon1.basic_info.name }}" class="img-fluid">
+            {% if pokemon1.species_info.is_legendary %}<span class="badge bg-warning">Legendary</span>{% endif %}
+        </div>
+        <div class="col-2 text-center">
+            <h3>VS</h3>
+        </div>
+        <div class="col-5 text-center">
+            <h2>{{ pokemon2.basic_info.name|title }}</h2>
+            <img src="{{ pokemon2.sprites.front_default }}" alt="{{ pokemon2.basic_info.name }}" class="img-fluid">
+            {% if pokemon2.species_info.is_legendary %}<span class="badge bg-warning">Legendary</span>{% endif %}
+        </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="card mb-4">
+        <div class="card-header"><h4>Base Stats</h4></div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>{{ pokemon1.basic_info.name|title }}</th>
+                        <th>{{ pokemon2.basic_info.name|title }}</th>
+                        <th>Winner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat1 in pokemon1.stats %}
+                        {% for stat2 in pokemon2.stats %}
+                            {% if stat1.name == stat2.name %}
+                                <tr>
+                                    <td>{{ stat1.name|title }}</td>
+                                    <td class="{% if stat1.base_stat > stat2.base_stat %}table-success{% elif stat1.base_stat < stat2.base_stat %}table-danger{% endif %}">
+                                        {{ stat1.base_stat }}
+                                    </td>
+                                    <td class="{% if stat2.base_stat > stat1.base_stat %}table-success{% elif stat2.base_stat < stat1.base_stat %}table-danger{% endif %}">
+                                        {{ stat2.base_stat }}
+                                    </td>
+                                    <td>
+                                        {% if stat1.base_stat > stat2.base_stat %}{{ pokemon1.basic_info.name|title }}
+                                        {% elif stat2.base_stat > stat1.base_stat %}{{ pokemon2.basic_info.name|title }}
+                                        {% else %}Tie{% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Quick Info -->
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">{{ pokemon1.basic_info.name|title }}</div>
+                <div class="card-body">
+                    <p><strong>Height:</strong> {{ pokemon1.basic_info.height }}m</p>
+                    <p><strong>Weight:</strong> {{ pokemon1.basic_info.weight }}kg</p>
+                    <p><strong>Base Experience:</strong> {{ pokemon1.basic_info.base_experience }}</p>
+                    <p><strong>Capture Rate:</strong> {{ pokemon1.species_info.capture_rate }}</p>
+                    <p><strong>Habitat:</strong> {{ pokemon1.species_info.habitat|default:"Unknown" }}</p>
+                    <p><strong>Types:</strong> 
+                        {% for type in pokemon1.types %}
+                            <span class="badge bg-primary">{{ type.name|title }}</span>
+                        {% endfor %}
+                    </p>
+                    <p><strong>Abilities:</strong>
+                        {% for ability in pokemon1.abilities %}
+                            {% if not ability.is_hidden %}
+                                <span class="badge bg-secondary">{{ ability.name|title }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Hidden Abilities:</strong>
+                        {% for ability in pokemon1.abilities %}
+                            {% if ability.is_hidden %}
+                                <span class="badge bg-dark">{{ ability.name|title }}</span>
+                            {% endif %}
+                        {% empty %}
+                            <span class="text-muted">None</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">{{ pokemon2.basic_info.name|title }}</div>
+                <div class="card-body">
+                    <p><strong>Height:</strong> {{ pokemon2.basic_info.height }}m</p>
+                    <p><strong>Weight:</strong> {{ pokemon2.basic_info.weight }}kg</p>
+                    <p><strong>Base Experience:</strong> {{ pokemon2.basic_info.base_experience }}</p>
+                    <p><strong>Capture Rate:</strong> {{ pokemon2.species_info.capture_rate }}</p>
+                    <p><strong>Habitat:</strong> {{ pokemon2.species_info.habitat|default:"Unknown" }}</p>
+                    <p><strong>Types:</strong> 
+                        {% for type in pokemon2.types %}
+                            <span class="badge bg-primary">{{ type.name|title }}</span>
+                        {% endfor %}
+                    </p>
+                    <p><strong>Abilities:</strong>
+                        {% for ability in pokemon2.abilities %}
+                            {% if not ability.is_hidden %}
+                                <span class="badge bg-secondary">{{ ability.name|title }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Hidden Abilities:</strong>
+                        {% for ability in pokemon2.abilities %}
+                            {% if ability.is_hidden %}
+                                <span class="badge bg-dark">{{ ability.name|title }}</span>
+                            {% endif %}
+                        {% empty %}
+                            <span class="text-muted">None</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{% url 'pokemon:pokemon' %}" class="btn btn-primary">Back to Pokédex</a>
+    </div>
+</div>
+
+{% endblock %}

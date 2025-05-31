@@ -3,14 +3,16 @@ from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from ..models import Pokemon
 import logging
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
 
 def get_pokemon_details(pokemon_id: int):
+    """Jeden univerzálny formát pre všetky použitia"""
     cache_key = f"pokemon_details_{pokemon_id}"
-
     result = cache.get(cache_key)
+
     if result:
         return result
 
@@ -28,7 +30,6 @@ def get_pokemon_details(pokemon_id: int):
             },
             "sprites": {
                 "front_default": pokemon.sprite_url,
-                "front_shiny": None,
             },
             "types": [{"name": tr.type.name} for tr in pokemon.types.all()],
             "abilities": [
@@ -36,11 +37,7 @@ def get_pokemon_details(pokemon_id: int):
                 for ab in pokemon.abilities.all()
             ],
             "stats": [
-                {
-                    "name": stat.stat_name,
-                    "base_stat": stat.base_stat,
-                    "effort": stat.effort,
-                }
+                {"name": stat.stat_name, "base_stat": stat.base_stat}
                 for stat in pokemon.stats.all()
             ],
             "species_info": {
@@ -56,3 +53,31 @@ def get_pokemon_details(pokemon_id: int):
     except Exception as e:
         logger.error(f"Error: {e}")
         return {"error": True, "message": str(e)}
+
+
+def get_pokemon_comparison(pokemon1_id: int, pokemon2_id: int) -> Dict[str, Any]:
+    """Zjednodušená comparison - používa rovnaký formát"""
+    cache_key = f"compare_{pokemon1_id}_{pokemon2_id}"
+    cached = cache.get(cache_key)
+
+    if cached:
+        return cached
+
+    try:
+        p1 = get_pokemon_details(pokemon1_id)
+        p2 = get_pokemon_details(pokemon2_id)
+
+        if p1.get("error") or p2.get("error"):
+            return {"error": True}
+
+        result = {
+            "pokemon1": p1,
+            "pokemon2": p2,
+        }
+
+        cache.set(cache_key, result, 3600)
+        return result
+
+    except Exception as e:
+        logger.error(f"Comparison error: {e}")
+        return {"error": True}
