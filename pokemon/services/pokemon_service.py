@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 def get_pokemon_details(pokemon_id: int):
-    """Získa pokémon detaily s len 1 API call"""
     cache_key = f'pokemon_details_{pokemon_id}'
     
     result = cache.get(cache_key)
