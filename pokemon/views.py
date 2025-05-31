@@ -17,7 +17,6 @@ def pokemon(request):
         per_page = 20
         offset = (page_number - 1) * per_page
         
-        # Vytvorenie Q filtra
         query_filter = Q()
         
         if pokemon_type:
@@ -26,7 +25,6 @@ def pokemon(request):
         if pokemon_ability:
             query_filter &= Q(abilities__ability_name=pokemon_ability)
         
-        # Optimalizovaný queryset s prefetch_related
         pokemon_queryset = (
             Pokemon.objects
             .select_related()
@@ -41,7 +39,6 @@ def pokemon(request):
         
         total_pages = (total_count + per_page - 1) // per_page if total_count > 0 else 1
         
-        # Vytvorenie context pre template
         context = {
             "pokemon_list": list(paginated_pokemon),  # Priamo queryset
             "current_page": page_number,
