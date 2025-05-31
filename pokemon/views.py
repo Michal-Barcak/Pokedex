@@ -40,7 +40,7 @@ def pokemon(request):
         total_pages = (total_count + per_page - 1) // per_page if total_count > 0 else 1
         
         context = {
-            "pokemon_list": list(paginated_pokemon),
+            "pokemon_list": paginated_pokemon,
             "current_page": page_number,
             "total_count": total_count,
             "total_pages": total_pages,

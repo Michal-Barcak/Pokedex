@@ -50,18 +50,19 @@
     <!-- Info panel -->
     <div class="alert alert-info">
         {% if pokemon_list %}
-            {% with first_pokemon=pokemon_list.0 last_pokemon=pokemon_list|last %}
-                Showing pokémon {{ first_pokemon.api_id }}-{{ last_pokemon.api_id }} of {{ total_count }}
+            {% with pokemon_count=pokemon_list|length %}
+                Showing {{ pokemon_count }} of {{ total_count }} pokémon
+                {% if total_pages > 1 %}
+                    (Page {{ current_page }} of {{ total_pages }})
+                {% endif %}
             {% endwith %}
         {% else %}
             Showing 0 of {{ total_count }} pokémon
         {% endif %}
-        (Page {{ current_page }} of {{ total_pages }})
         
         <span class="badge bg-success data-source-badge ms-2">Fast loading from DB</span>
     </div>
     
-    <!-- Pokémon table s priamym prístupom -->
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-dark">
