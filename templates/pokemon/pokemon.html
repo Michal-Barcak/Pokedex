@@ -92,7 +92,9 @@
                             <strong>#{{ pokemon.api_id }}</strong>
                         </td>
                         <td class="align-middle">
-                            <strong>{{ pokemon.name|title }}</strong>
+                            <a href="{% url 'pokemon:pokemon_detail' pokemon.api_id %}" class="text-decoration-none">
+                                <strong>{{ pokemon.name|title }}</strong>
+                            </a>
                         </td>
                         
                         <!-- Vylepšené Types s CSS Grid -->

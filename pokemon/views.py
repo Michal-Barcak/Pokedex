@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from .models import Pokemon, PokemonType, PokemonAbility
+from .services.pokemon_service import get_pokemon_details
 import logging
 
 logger = logging.getLogger(__name__)
@@ -33,10 +34,11 @@ def pokemon(request):
             .order_by('api_id')
             .distinct()
         )
-        
+        available_types = PokemonType.objects.values_list('name', flat=True).order_by('name')
+        available_abilities = PokemonAbility.objects.values_list('ability_name', flat=True).distinct().order_by('ability_name')
+
         total_count = pokemon_queryset.count()
-        paginated_pokemon = pokemon_queryset[offset:offset + per_page]
-        
+        paginated_pokemon = list(pokemon_queryset[offset:offset + per_page])
         total_pages = (total_count + per_page - 1) // per_page if total_count > 0 else 1
         
         context = {
@@ -47,8 +49,8 @@ def pokemon(request):
             "has_next": page_number < total_pages,
             "has_previous": page_number > 1,
             "data_source": "database",
-            "available_types": PokemonType.objects.values_list('name', flat=True).order_by('name'),
-            "available_abilities": PokemonAbility.objects.values_list('ability_name', flat=True).distinct().order_by('ability_name'),
+            "available_types": available_types,
+            "available_abilities": available_abilities,
             "selected_type": pokemon_type,
             "selected_ability": pokemon_ability,
         }
@@ -61,3 +63,25 @@ def pokemon(request):
     except Exception as e:
         logger.error(f"Error in pokemon view: {e}")
         return render(request, "pokemon/error.html", {"error": "An error occurred."})
+
+def pokemon_detail(request, pokemon_id):
+    try:
+        pokemon_details = get_pokemon_details(pokemon_id)
+        
+        if pokemon_details.get('error'):
+            return render(request, 'pokemon/error.html', {
+                'error': f"Could not load details for Pokémon #{pokemon_id}"
+            })
+        
+        context = {
+            'details': pokemon_details,
+            'load_info': pokemon_details.get('load_info', {}),
+        }
+        
+        return render(request, 'pokemon/pokemon_detail.html', context)
+        
+    except Exception as e:
+        logger.error(f"Error in pokemon_detail view: {e}")
+        return render(request, 'pokemon/error.html', {
+            'error': "An error occurred while loading Pokémon details."
+        })

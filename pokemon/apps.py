@@ -7,8 +7,8 @@
 
 
 from django.apps import AppConfig
-from django.core.management import call_command
 import logging
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -17,18 +17,26 @@ class PokemonConfig(AppConfig):
     name = 'pokemon'
     
     def ready(self):
-        """Spustí sa pri štarte Django aplikácie"""
-        try:
-            from .models import Pokemon
-            pokemon_count = Pokemon.objects.count()
+        """Run during start Django app"""
+        if len(sys.argv) > 1 and sys.argv[1] in [
+            'makemigrations', 'migrate', 'shell', 'test', 
+            'collectstatic', 'check', 'showmigrations'
+        ]:
+            return
             
-            if pokemon_count < 10:  # Ak máme menej ako 10 pokémonov
-                logger.info("🔄 Spúšťam automatickú synchronizáciu pokémonov...")
-                call_command('sync_pokemon', '--limit=151')
-                logger.info("✅ Automatická synchronizácia dokončená")
-            else:
-                logger.info(f"ℹ️ Databáza už obsahuje {pokemon_count} pokémonov")
+        if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
+            try:
+                from .models import Pokemon
+                pokemon_count = Pokemon.objects.count()
                 
-        except Exception as e:
-            # Tabuľky ešte neexistujú alebo iná chyba
-            logger.warning(f"⚠️ Nemôžem spustiť sync: {e}")
+                if pokemon_count < 10:
+                    logger.info("🔄 Starting automatic pokemon sync...")
+                    from django.core.management import call_command
+                    call_command('sync_pokemon', limit=151)
+                    logger.info("✅ Automatic sync done")
+                else:
+                    logger.info(f"ℹ️ Database contains {pokemon_count} pokemons")
+                    
+            except Exception as e:
+                logger.warning(f"⚠️ Can not run sync: {e}")
+

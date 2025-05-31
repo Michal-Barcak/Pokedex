@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import os
 from pathlib import Path
 from decouple import config
 
@@ -41,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "pokemon.apps.PokemonConfig", 
+    # "pokemon.apps.PokemonConfig",
     "pokemon",
 ]
 
@@ -133,5 +132,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Pokebase cache nastavenia
+# Pokebase cache settings
 POKEBASE_CACHE_DIR = BASE_DIR / "pokebase_cache"
+
+# Cache TTL for pokemon details
+POKEMON_DETAIL_CACHE_TTL = 3600  # 1 hour

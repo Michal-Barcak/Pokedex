@@ -32,5 +32,6 @@ extend-exclude = '''
   | manage\.py
   | settings\.py
   | local_settings\.py
+  | models\.py
 )/
 '''

@@ -2,10 +2,30 @@ from django.db import models
 
 
 class Pokemon(models.Model):
-    api_id = models.IntegerField(unique=True)
-    name = models.CharField(max_length=100)
-    sprite_url = models.URLField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    api_id = models.IntegerField(
+        unique=True
+        )
+    name = models.CharField(
+        max_length=100
+        )
+    sprite_url = models.URLField(
+        null=True, 
+        blank=True
+        )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+        )
+    height = models.FloatField(
+        null=True, 
+        blank=True
+        )
+    weight = models.FloatField(
+        null=True, blank=True
+        ) 
+    base_experience = models.IntegerField(
+        null=True, 
+        blank=True
+        )
 
     class Meta:
         db_table = "pokemon"
@@ -16,8 +36,13 @@ class Pokemon(models.Model):
 
 
 class PokemonType(models.Model):
-    api_id = models.IntegerField(unique=True)
-    name = models.CharField(max_length=50, unique=True)
+    api_id = models.IntegerField(
+        unique=True
+        )
+    name = models.CharField(
+        max_length=50, 
+        unique=True
+        )
 
     class Meta:
         db_table = "pokemon_type"
@@ -29,9 +54,14 @@ class PokemonType(models.Model):
 
 class PokemonTypeRelation(models.Model):
     pokemon = models.ForeignKey(
-        Pokemon, on_delete=models.CASCADE, related_name="types"
+        Pokemon, 
+        on_delete=models.CASCADE, 
+        related_name="types"
     )
-    type = models.ForeignKey(PokemonType, on_delete=models.CASCADE)
+    type = models.ForeignKey(
+        PokemonType, 
+        on_delete=models.CASCADE
+        )
     slot = models.IntegerField()
 
     class Meta:
@@ -42,10 +72,16 @@ class PokemonTypeRelation(models.Model):
 
 class PokemonAbility(models.Model):
     pokemon = models.ForeignKey(
-        Pokemon, on_delete=models.CASCADE, related_name="abilities"
+        Pokemon, 
+        on_delete=models.CASCADE, 
+        related_name="abilities"
     )
-    ability_name = models.CharField(max_length=100)
-    is_hidden = models.BooleanField(default=False)
+    ability_name = models.CharField(
+        max_length=100
+        )
+    is_hidden = models.BooleanField(
+        default=False
+        )
     slot = models.IntegerField()
 
     class Meta:
