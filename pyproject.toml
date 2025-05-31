@@ -2,7 +2,7 @@
 line-length = 85
 target-version = ['py39']
 include = '\.pyi?$'
-force-exclude = '''
+extend-exclude = '''
 /(
     # Directories
     \.eggs
@@ -32,6 +32,6 @@ force-exclude = '''
   | manage\.py
   | settings\.py
   | local_settings\.py
-  | models\.py
+  | ^pokemon/models\.py$
 )/
 '''

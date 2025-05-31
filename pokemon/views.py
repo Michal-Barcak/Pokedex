@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.db.models import Q
 from .models import Pokemon, PokemonType, PokemonAbility
 from .services.pokemon_service import get_pokemon_details
@@ -29,15 +29,15 @@ def pokemon(request):
 
         pokemon_queryset = (
             Pokemon.objects.select_related()
-            .prefetch_related("types__type", "abilities")
+            .prefetch_related("types__type", "abilities", "stats")
             .filter(query_filter)
             .order_by("api_id")
             .distinct()
         )
-        available_types = PokemonType.objects.values_list(
-            "name", flat=True
-        ).order_by("name")
-        available_abilities = (
+        available_types = list(
+            PokemonType.objects.values_list("name", flat=True).order_by("name")
+        )
+        available_abilities = list(
             PokemonAbility.objects.values_list("ability_name", flat=True)
             .distinct()
             .order_by("ability_name")
@@ -45,6 +45,7 @@ def pokemon(request):
 
         total_count = pokemon_queryset.count()
         paginated_pokemon = list(pokemon_queryset[offset : offset + per_page])
+
         total_pages = (
             (total_count + per_page - 1) // per_page if total_count > 0 else 1
         )
@@ -88,7 +89,6 @@ def pokemon_detail(request, pokemon_id):
 
         context = {
             "details": pokemon_details,
-            "load_info": pokemon_details.get("load_info", {}),
         }
 
         return render(request, "pokemon/pokemon_detail.html", context)

@@ -7,23 +7,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pokemon', '0003_pokemon_base_experience_pokemon_height_and_more'),
+        ("pokemon", "0003_pokemon_base_experience_pokemon_height_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PokemonStats',
+            name="PokemonStats",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('stat_name', models.CharField(max_length=50)),
-                ('base_stat', models.IntegerField()),
-                ('effort', models.IntegerField(default=0)),
-                ('pokemon', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stats', to='pokemon.pokemon')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("stat_name", models.CharField(max_length=50)),
+                ("base_stat", models.IntegerField()),
+                ("effort", models.IntegerField(default=0)),
+                (
+                    "pokemon",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="stats",
+                        to="pokemon.pokemon",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'pokemon_stats',
-                'ordering': ['pokemon', 'stat_name'],
-                'unique_together': {('pokemon', 'stat_name')},
+                "db_table": "pokemon_stats",
+                "ordering": ["pokemon", "stat_name"],
+                "unique_together": {("pokemon", "stat_name")},
             },
         ),
     ]

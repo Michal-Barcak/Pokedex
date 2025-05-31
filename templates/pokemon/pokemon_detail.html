@@ -10,19 +10,7 @@
             <h1 class="mb-0">{{ details.basic_info.name|title }}</h1>
             <p class="text-muted mb-0">#{{ details.basic_info.id }}</p>
         </div>
-        
-        <!-- Load indikátor -->
-        <div class="load-info-container">
-            {% if load_info.source == 'cache' %}
-                <span class="badge bg-success load-badge">
-                    <i class="fas fa-bolt"></i> Cache
-                </span>
-            {% elif load_info.source == 'api' %}
-                <span class="badge bg-info load-badge">
-                    <i class="fas fa-download"></i> Pokebase API
-                </span>
-            {% endif %}
-        </div>
+    
     </div>
     
     <!-- Breadcrumb -->
@@ -109,28 +97,31 @@
                 </div>
             </div>
             
-            <!-- Base Stats -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Base Stats</h5>
-                </div>
-                <div class="card-body">
-                    {% for stat in details.stats %}
-                        <div class="row mb-2">
-                            <div class="col-4">
-                                <strong>{{ stat.name|title }}:</strong>
-                            </div>
-                            <div class="col-8">
-                                <div class="progress">
-                                    <div class="progress-bar bg-primary" style="width: {% widthratio stat.base_stat 255 100 %}%">
-                                        {{ stat.base_stat }}
-                                    </div>
+        <!-- Base Stats -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Base Stats</h5>
+            </div>
+            <div class="card-body">
+                {% for stat in details.stats %}
+                    <div class="row mb-2">
+                        <div class="col-4">
+                            <strong>{{ stat.name|title }}:</strong>
+                        </div>
+                        <div class="col-8">
+                            <div class="progress position-relative">
+                                <div class="progress-bar bg-primary" style="width: {% widthratio stat.base_stat 255 100 %}%">
+                                    <span class="progress-text">{{ stat.base_stat }}</span>
                                 </div>
+                                {% if stat.effort > 0 %}
+                                    <span class="ev-badge">+{{ stat.effort }} EV</span>
+                                {% endif %}
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
+        </div>
         </div>
     </div>
 </div>

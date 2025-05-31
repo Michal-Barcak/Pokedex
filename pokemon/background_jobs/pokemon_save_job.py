@@ -1,5 +1,11 @@
 from typing import Dict, Any
-from ..models import Pokemon, PokemonType, PokemonTypeRelation, PokemonAbility
+from ..models import (
+    Pokemon,
+    PokemonType,
+    PokemonTypeRelation,
+    PokemonAbility,
+    PokemonStats,
+)
 from django.db import transaction
 import logging
 
@@ -7,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def save_pokemon_to_db(pokemon_data: Dict[str, Any]) -> None:
+    """Save pokemon to db"""
     try:
         with transaction.atomic():
             pokemon_obj = Pokemon.objects.create(
@@ -37,7 +44,15 @@ def save_pokemon_to_db(pokemon_data: Dict[str, Any]) -> None:
                     slot=ability_data["slot"],
                 )
 
-            logger.info(f"Saved pokemon: {pokemon_obj.name}")
+            for stat_data in pokemon_data["stats"]:
+                PokemonStats.objects.create(
+                    pokemon=pokemon_obj,
+                    stat_name=stat_data["stat"]["name"],
+                    base_stat=stat_data["base_stat"],
+                    effort=stat_data["effort"],
+                )
+
+            logger.info(f"Saved pokemon with stats: {pokemon_obj.name}")
 
     except Exception as e:
         logger.error(f"Error saving pokemon to database: {e}")
