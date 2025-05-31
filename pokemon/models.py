@@ -8,6 +8,7 @@ class Pokemon(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "pokemon"
         ordering = ["api_id"]
 
     def __str__(self):
@@ -19,6 +20,7 @@ class PokemonType(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
     class Meta:
+        db_table = "pokemon_type"
         ordering = ["name"]
 
     def __str__(self):
@@ -33,6 +35,7 @@ class PokemonTypeRelation(models.Model):
     slot = models.IntegerField()
 
     class Meta:
+        db_table = "pokemon_type_relation"
         unique_together = ["pokemon", "slot"]
         ordering = ["slot"]
 
@@ -46,5 +49,6 @@ class PokemonAbility(models.Model):
     slot = models.IntegerField()
 
     class Meta:
+        db_table = "pokemon_ability"
         unique_together = ["pokemon", "ability_name"]
         ordering = ["slot"]
