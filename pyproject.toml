@@ -1,0 +1,37 @@
+[tool.black]
+line-length = 85
+target-version = ['py39']
+include = '\.pyi?$'
+force-exclude = '''
+/(
+    # Directories
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | venv
+  | env
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+  | __pycache__
+  | \.pytest_cache
+  | node_modules
+  | staticfiles
+  | media
+  # Files
+  | \.gitignore
+  | \.env
+  | \.env\..*
+  | db\.sqlite3
+  | \.db
+  | manage\.py
+  | settings\.py
+  | local_settings\.py
+  | models\.py
+)/
+'''

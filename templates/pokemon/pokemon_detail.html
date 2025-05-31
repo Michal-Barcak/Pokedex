@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ details.basic_info.name|title }} - Pokédex{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header s load indikátorom -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0">{{ details.basic_info.name|title }}</h1>
+            <p class="text-muted mb-0">#{{ details.basic_info.id }}</p>
+        </div>
+        
+        <!-- Load indikátor -->
+        <div class="load-info-container">
+            {% if load_info.source == 'cache' %}
+                <span class="badge bg-success load-badge">
+                    <i class="fas fa-bolt"></i> Cache
+                </span>
+            {% elif load_info.source == 'api' %}
+                <span class="badge bg-info load-badge">
+                    <i class="fas fa-download"></i> Pokebase API
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'pokemon:pokemon' %}">Pokédex</a></li>
+            <li class="breadcrumb-item active">{{ details.basic_info.name|title }}</li>
+        </ol>
+    </nav>
+    
+    <!-- Main content -->
+    <div class="row">
+        <!-- Left column - Images and basic info -->
+        <div class="col-md-4">
+            <!-- Sprites -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Sprites</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6>Normal</h6>
+                            {% if details.sprites.front_default %}
+                                <img src="{{ details.sprites.front_default }}" alt="Front" class="img-fluid mb-2">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Basic Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Basic Info</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Height:</strong> {{ details.basic_info.height|floatformat:1 }} m</p>
+                    <p><strong>Weight:</strong> {{ details.basic_info.weight|floatformat:1 }} kg</p>
+                    <p><strong>Base Experience:</strong> {{ details.basic_info.base_experience|default:"N/A" }}</p>
+                    <p><strong>Capture Rate:</strong> {{ details.species_info.capture_rate }}</p>
+                    {% if details.species_info.habitat %}
+                        <p><strong>Habitat:</strong> {{ details.species_info.habitat|title }}</p>
+                    {% endif %}
+                    {% if details.species_info.is_legendary %}
+                        <p><span class="badge bg-warning">Legendary</span></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right column - Detailed info -->
+        <div class="col-md-8">
+            <!-- Types and Abilities -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Types</h5>
+                        </div>
+                        <div class="card-body">
+                            {% for type in details.types %}
+                                <span class="badge bg-primary me-2 mb-2 type-badge-large">
+                                    {{ type.name|title }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Abilities</h5>
+                        </div>
+                        <div class="card-body">
+                            {% for ability in details.abilities %}
+                                <span class="badge {% if ability.is_hidden %}bg-secondary{% else %}bg-success{% endif %} me-2 mb-2">
+                                    {{ ability.name|title }}
+                                    {% if ability.is_hidden %} (Hidden){% endif %}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Base Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Base Stats</h5>
+                </div>
+                <div class="card-body">
+                    {% for stat in details.stats %}
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <strong>{{ stat.name|title }}:</strong>
+                            </div>
+                            <div class="col-8">
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" style="width: {% widthratio stat.base_stat 255 100 %}%">
+                                        {{ stat.base_stat }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.load-badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+}
+
+.type-badge-large {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+}
+
+.progress {
+    height: 20px;
+}
+
+.load-info-container {
+    text-align: right;
+}
+
+.pokemon-sprite {
+    max-width: 96px;
+    max-height: 96px;
+}
+</style>
+{% endblock %}
