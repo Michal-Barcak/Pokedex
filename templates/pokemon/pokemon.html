@@ -59,25 +59,34 @@
         {% else %}
             Showing 0 of {{ total_count }} pokémon
         {% endif %}
-        
-        <span class="badge bg-success data-source-badge ms-2">Fast loading from DB</span>
     </div>
-    
-    <!-- Pokémon table s vylepšeným zarovnaním -->
+
+    <!-- Pokémon table s rozdelenými abilities stĺpcami -->
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
+                    <th style="width: 40px;"></th>
                     <th style="width: 80px;">Image</th>
                     <th style="width: 60px;">ID</th>
                     <th style="width: 150px;">Name</th>
-                    <th style="width: 200px;">Type(s)</th>
-                    <th style="width: 300px;">Abilities</th>
+                    <th style="width: 160px;">Type(s)</th>
+                    <!-- ✅ ROZDELENÉ ABILITIES STĹPCE -->
+                    <th style="width: 120px;">Primary</th>
+                    <th style="width: 120px;">Secondary</th>
+                    <th style="width: 120px;">Hidden</th>
                 </tr>
             </thead>
             <tbody>
                 {% for pokemon in pokemon_list %}
                     <tr>
+                        <td class="text-center">
+                            <input type="checkbox" 
+                                class="pokemon-compare-checkbox" 
+                                data-pokemon-id="{{ pokemon.id }}"
+                                data-pokemon-name="{{ pokemon.name }}"
+                                onchange="togglePokemonSelection(this)">
+                        </td>
                         <td class="text-center">
                             {% if pokemon.sprite_url %}
                                 <img src="{{ pokemon.sprite_url }}" alt="{{ pokemon.name }}" 
@@ -97,75 +106,59 @@
                             </a>
                         </td>
                         
-                        <!-- Vylepšené Types s CSS Grid -->
+                        <!-- Types s fixnou šírkou -->
                         <td class="align-middle">
-                            <div class="types-container">
-                                {% for type_relation in pokemon.types.all %}
-                                    <span class="type-badge type-{{ type_relation.type.name|lower }}">
-                                        {{ type_relation.type.name|title }}
-                                    </span>
-                                {% empty %}
-                                    <span class="text-muted small">No types</span>
-                                {% endfor %}
-                            </div>
+                            {% for type_relation in pokemon.types.all %}
+                                <span class="badge-type-fixed" data-type="{{ type_relation.type.name|lower }}">
+                                    {{ type_relation.type.name|title }}
+                                </span>
+                            {% empty %}
+                                <span class="text-muted small">No types</span>
+                            {% endfor %}
                         </td>
                         
-                        <!-- Vylepšené Abilities s podstĺpcami -->
-                        <td class="align-middle">
-                            <div class="abilities-container">
-                                <!-- Primary Abilities -->
-                                <div class="ability-section">
-                                    <div class="ability-header">Primary</div>
-                                    <div class="ability-list">
-                                        {% for ability in pokemon.abilities.all %}
-                                            {% if not ability.is_hidden and ability.slot == 1 %}
-                                                <span class="ability-badge ability-primary">
-                                                    {{ ability.ability_name|title }}
-                                                </span>
-                                            {% endif %}
-                                        {% empty %}
-                                            <span class="text-muted small">None</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                
-                                <!-- Secondary Abilities -->
-                                <div class="ability-section">
-                                    <div class="ability-header">Secondary</div>
-                                    <div class="ability-list">
-                                        {% for ability in pokemon.abilities.all %}
-                                            {% if not ability.is_hidden and ability.slot == 2 %}
-                                                <span class="ability-badge ability-secondary">
-                                                    {{ ability.ability_name|title }}
-                                                </span>
-                                            {% endif %}
-                                        {% empty %}
-                                            <span class="text-muted small">None</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                
-                                <!-- Hidden Abilities -->
-                                <div class="ability-section">
-                                    <div class="ability-header">Hidden</div>
-                                    <div class="ability-list">
-                                        {% for ability in pokemon.abilities.all %}
-                                            {% if ability.is_hidden %}
-                                                <span class="ability-badge ability-hidden">
-                                                    {{ ability.ability_name|title }}
-                                                </span>
-                                            {% endif %}
-                                        {% empty %}
-                                            <span class="text-muted small">None</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- ✅ PRIMARY ABILITY STĹPEC -->
+                        <td class="align-middle text-center">
+                            {% for ability in pokemon.abilities.all %}
+                                {% if ability.slot == 1 and not ability.is_hidden %}
+                                    <span class="badge-ability-primary">
+                                        {{ ability.ability_name|title }}
+                                    </span>
+                                {% endif %}
+                            {% empty %}
+                                <span class="text-muted small">-</span>
+                            {% endfor %}
+                        </td>
+                        
+                        <!-- ✅ SECONDARY ABILITY STĹPEC -->
+                        <td class="align-middle text-center">
+                            {% for ability in pokemon.abilities.all %}
+                                {% if ability.slot == 2 and not ability.is_hidden %}
+                                    <span class="badge-ability-secondary">
+                                        {{ ability.ability_name|title }}
+                                    </span>
+                                {% endif %}
+                            {% empty %}
+                                <span class="text-muted small">-</span>
+                            {% endfor %}
+                        </td>
+                        
+                        <!-- ✅ HIDDEN ABILITY STĹPEC -->
+                        <td class="align-middle text-center">
+                            {% for ability in pokemon.abilities.all %}
+                                {% if ability.is_hidden %}
+                                    <span class="badge-ability-hidden">
+                                        {{ ability.ability_name|title }}
+                                    </span>
+                                {% endif %}
+                            {% empty %}
+                                <span class="text-muted small">-</span>
+                            {% endfor %}
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="8" class="text-center">
                             <div class="alert alert-warning">
                                 No pokémon were found.
                                 {% if selected_type or selected_ability %}
@@ -218,7 +211,19 @@
     {% endif %}
 </div>
 
-<!-- Vylepšené CSS štýly -->
+<!-- Compare buttons -->
+<div class="compare-buttons-container position-fixed bottom-0 start-50 translate-middle-x mb-3" style="z-index: 1000;">
+    <div class="d-flex gap-2 align-items-center bg-white rounded-pill shadow-lg px-4 py-2 border">
+        <a id="compare-btn" href="#" class="btn btn-primary btn-sm rounded-pill" style="display: none;">
+            <i class="fas fa-balance-scale me-1"></i>Compare Selected
+        </a>
+        <button onclick="clearSelection()" class="btn btn-outline-secondary btn-sm rounded-pill">
+            <i class="fas fa-times me-1"></i>Clear
+        </button>
+    </div>
+</div>
+
+<!-- CSS s rozdelenými abilities stĺpcami -->
 <style>
 /* Filter štýly */
 .filter-container {
@@ -268,99 +273,141 @@
     margin-top: 18px;
 }
 
-/* Types container s CSS Grid */
-.types-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4px;
-    align-items: start;
+/* Table improvements */
+.table th {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px 8px;
+    font-weight: 600;
 }
 
-.type-badge {
-    display: inline-block;
+.table td {
+    vertical-align: middle;
+    padding: 12px 8px;
+}
+
+/* Zarovnanie Type(s) stĺpca */
+.table th:nth-child(5),
+.table td:nth-child(5) {
+    text-align: left;
+    padding-left: 15px;
+}
+
+/* Type badges s FIXNOU ŠÍRKOU */
+.badge-type-fixed {
+    font-size: 0.75rem;
     padding: 4px 8px;
     border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-align: center;
-    color: white;
-    margin-bottom: 2px;
-}
-
-/* Type colors */
-.type-normal { background-color: #A8A878; }
-.type-fire { background-color: #F08030; }
-.type-water { background-color: #6890F0; }
-.type-electric { background-color: #F8D030; color: #333; }
-.type-grass { background-color: #78C850; }
-.type-ice { background-color: #98D8D8; }
-.type-fighting { background-color: #C03028; }
-.type-poison { background-color: #A040A0; }
-.type-ground { background-color: #E0C068; }
-.type-flying { background-color: #A890F0; }
-.type-psychic { background-color: #F85888; }
-.type-bug { background-color: #A8B820; }
-.type-rock { background-color: #B8A038; }
-.type-ghost { background-color: #705898; }
-.type-dragon { background-color: #7038F8; }
-
-/* Abilities container s CSS Grid */
-.abilities-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    align-items: start;
-}
-
-.ability-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.ability-header {
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-    color: #6c757d;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 2px;
-    width: 100%;
-}
-
-.ability-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: 100%;
-}
-
-.ability-badge {
-    display: inline-block;
-    padding: 3px 6px;
-    border-radius: 8px;
-    font-size: 0.7rem;
     font-weight: 500;
-    text-align: center;
+    text-transform: capitalize;
+    display: inline-block;
+    margin-right: 4px;
     margin-bottom: 2px;
+    width: 70px;
+    text-align: center;
+    min-width: 70px;
+}
+
+/* Farby typov */
+.badge-type-fixed[data-type="grass"] { background-color: #78C850; color: white; }
+.badge-type-fixed[data-type="poison"] { background-color: #A040A0; color: white; }
+.badge-type-fixed[data-type="fire"] { background-color: #F08030; color: white; }
+.badge-type-fixed[data-type="flying"] { background-color: #A890F0; color: white; }
+.badge-type-fixed[data-type="water"] { background-color: #6890F0; color: white; }
+.badge-type-fixed[data-type="bug"] { background-color: #A8B820; color: white; }
+.badge-type-fixed[data-type="normal"] { background-color: #A8A878; color: white; }
+.badge-type-fixed[data-type="electric"] { background-color: #F8D030; color: black; }
+.badge-type-fixed[data-type="ground"] { background-color: #E0C068; color: black; }
+.badge-type-fixed[data-type="fairy"] { background-color: #EE99AC; color: white; }
+.badge-type-fixed[data-type="fighting"] { background-color: #C03028; color: white; }
+.badge-type-fixed[data-type="psychic"] { background-color: #F85888; color: white; }
+.badge-type-fixed[data-type="rock"] { background-color: #B8A038; color: white; }
+.badge-type-fixed[data-type="steel"] { background-color: #B8B8D0; color: black; }
+.badge-type-fixed[data-type="ice"] { background-color: #98D8D8; color: black; }
+.badge-type-fixed[data-type="ghost"] { background-color: #705898; color: white; }
+.badge-type-fixed[data-type="dragon"] { background-color: #7038F8; color: white; }
+.badge-type-fixed[data-type="dark"] { background-color: #705848; color: white; }
+
+/* ✅ ROZDELENÉ ABILITY BADGES PRE JEDNOTLIVÉ STĹPCE */
+.badge-ability-primary {
+    background-color: #0d6efd;
+    color: white;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badge-ability-secondary {
+    background-color: #6c757d;
+    color: white;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badge-ability-hidden {
+    background-color: #dc3545;
+    color: white;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+.badge-ability-hidden::after {
+    content: "🔒";
+    font-size: 0.6rem;
+    margin-left: 2px;
+}
+
+/* Sticky compare buttons */
+.compare-buttons-container {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translate(-50%, 100%); }
+    to { transform: translate(-50%, 0); }
+}
+
+.pokemon-sprite {
+    max-width: 64px;
+    max-height: 64px;
+}
+
+/* ✅ FULL WIDTH TABLE - zaberie celú šírku */
+.table-responsive {
     width: 100%;
+    overflow-x: auto;
 }
 
-.ability-primary {
-    background-color: #28a745;
-    color: white;
-}
-
-.ability-secondary {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.ability-hidden {
-    background-color: #6f42c1;
-    color: white;
+.table {
+    width: 100%;
+    min-width: 800px; /* Minimálna šírka pre scroll */
 }
 
 /* Responsive design */
@@ -380,32 +427,29 @@
         align-self: flex-start;
     }
     
-    .abilities-container {
-        grid-template-columns: 1fr;
-        gap: 6px;
+    .badge-type-fixed {
+        width: 60px;
+        min-width: 60px;
+        font-size: 0.7rem;
+        padding: 3px 6px;
     }
     
-    .ability-section {
-        border-bottom: 1px solid #dee2e6;
-        padding-bottom: 4px;
-        margin-bottom: 4px;
+    .badge-ability-primary,
+    .badge-ability-secondary,
+    .badge-ability-hidden {
+        width: 80px;
+        min-width: 80px;
+        font-size: 0.7rem;
+        padding: 3px 6px;
     }
     
-    .ability-section:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
+    .table-responsive {
+        font-size: 0.9rem;
     }
-}
-
-/* Table improvements */
-.table td {
-    vertical-align: middle;
-    padding: 12px 8px;
-}
-
-.pokemon-sprite {
-    max-width: 64px;
-    max-height: 64px;
+    
+    .table {
+        min-width: 600px;
+    }
 }
 </style>
 {% endblock %}
