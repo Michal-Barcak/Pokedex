@@ -2,7 +2,7 @@
 line-length = 85
 target-version = ['py39']
 include = '\.pyi?$'
-extend-exclude = '''
+force-exclude = '''
 /(
     # Directories
     \.eggs
