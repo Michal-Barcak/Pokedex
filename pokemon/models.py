@@ -88,3 +88,26 @@ class PokemonAbility(models.Model):
         db_table = "pokemon_ability"
         unique_together = ["pokemon", "ability_name"]
         ordering = ["slot"]
+
+
+class PokemonStats(models.Model):
+    pokemon = models.ForeignKey(
+        Pokemon, 
+        on_delete=models.CASCADE, 
+        related_name='stats'
+        )
+    stat_name = models.CharField(
+        max_length=50
+        )
+    base_stat = models.IntegerField()
+    effort = models.IntegerField(
+        default=0
+        )
+    
+    class Meta:
+        db_table = "pokemon_stats"
+        unique_together = ['pokemon', 'stat_name']
+        ordering = ['pokemon', 'stat_name']
+    
+    def __str__(self):
+        return f"{self.pokemon.name} - {self.stat_name}: {self.base_stat}"

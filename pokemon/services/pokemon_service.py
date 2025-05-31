@@ -12,7 +12,6 @@ def get_pokemon_details(pokemon_id: int):
 
     result = cache.get(cache_key)
     if result:
-        result["load_info"] = {"source": "cache"}
         return result
 
     try:
@@ -36,13 +35,19 @@ def get_pokemon_details(pokemon_id: int):
                 {"name": ab.ability_name, "is_hidden": ab.is_hidden}
                 for ab in pokemon.abilities.all()
             ],
-            "stats": [],
+            "stats": [
+                {
+                    "name": stat.stat_name,
+                    "base_stat": stat.base_stat,
+                    "effort": stat.effort,
+                }
+                for stat in pokemon.stats.all()
+            ],
             "species_info": {
                 "capture_rate": species.capture_rate,
                 "is_legendary": species.is_legendary,
                 "habitat": species.habitat.name if species.habitat else None,
             },
-            "load_info": {"source": "hybrid"},
         }
 
         cache.set(cache_key, result, 3600)

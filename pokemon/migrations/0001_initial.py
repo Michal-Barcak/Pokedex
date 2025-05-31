@@ -8,59 +8,110 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Pokemon',
+            name="Pokemon",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('api_id', models.IntegerField(unique=True)),
-                ('name', models.CharField(max_length=100)),
-                ('sprite_url', models.URLField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("api_id", models.IntegerField(unique=True)),
+                ("name", models.CharField(max_length=100)),
+                ("sprite_url", models.URLField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'ordering': ['api_id'],
+                "ordering": ["api_id"],
             },
         ),
         migrations.CreateModel(
-            name='PokemonType',
+            name="PokemonType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('api_id', models.IntegerField(unique=True)),
-                ('name', models.CharField(max_length=50, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("api_id", models.IntegerField(unique=True)),
+                ("name", models.CharField(max_length=50, unique=True)),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='PokemonAbility',
+            name="PokemonAbility",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ability_name', models.CharField(max_length=100)),
-                ('is_hidden', models.BooleanField(default=False)),
-                ('slot', models.IntegerField()),
-                ('pokemon', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='abilities', to='pokemon.pokemon')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("ability_name", models.CharField(max_length=100)),
+                ("is_hidden", models.BooleanField(default=False)),
+                ("slot", models.IntegerField()),
+                (
+                    "pokemon",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="abilities",
+                        to="pokemon.pokemon",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['slot'],
-                'unique_together': {('pokemon', 'ability_name')},
+                "ordering": ["slot"],
+                "unique_together": {("pokemon", "ability_name")},
             },
         ),
         migrations.CreateModel(
-            name='PokemonTypeRelation',
+            name="PokemonTypeRelation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('slot', models.IntegerField()),
-                ('pokemon', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='types', to='pokemon.pokemon')),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pokemon.pokemontype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("slot", models.IntegerField()),
+                (
+                    "pokemon",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="types",
+                        to="pokemon.pokemon",
+                    ),
+                ),
+                (
+                    "type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="pokemon.pokemontype",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['slot'],
-                'unique_together': {('pokemon', 'slot')},
+                "ordering": ["slot"],
+                "unique_together": {("pokemon", "slot")},
             },
         ),
     ]
