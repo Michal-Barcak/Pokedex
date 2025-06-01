@@ -1,12 +1,25 @@
+# Core dependencies
+Django==5.2.1
+pokebase==1.4.1
+requests==2.32.3
+python-decouple==3.8
+
+# Auto-installed dependencies
 asgiref==3.8.1
 certifi==2025.4.26
 charset-normalizer==3.4.2
-Django==5.2.1
+click==8.2.1
 idna==3.10
-pillow==11.2.1
-python-decouple==3.8
-requests==2.32.3
 sqlparse==0.5.3
-typing_extensions==4.13.2
 urllib3==2.4.0
-pokebase>=1.4.1
+
+# Development tools
+black==25.1.0
+
+# Black dependencies
+mypy_extensions==1.1.0
+packaging==25.0
+pathspec==0.12.1
+platformdirs==4.3.8
+tomli==2.2.1
+typing_extensions==4.13.2

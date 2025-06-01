@@ -36,7 +36,7 @@ class PokemonConfig(AppConfig):
 
                 pokemon_count = Pokemon.objects.count()
 
-                if pokemon_count < 10:
+                if pokemon_count < 151:
                     logger.info("🔄 Starting automatic pokemon sync...")
                     from django.core.management import call_command
 
