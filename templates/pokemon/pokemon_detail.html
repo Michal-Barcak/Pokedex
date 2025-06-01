@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}{{ details.basic_info.name|title }} - Pokédex{% endblock %}
@@ -34,7 +35,7 @@
                         <div class="col-6">
                             <h6>Normal</h6>
                             {% if details.sprites.front_default %}
-                                <img src="{{ details.sprites.front_default }}" alt="Front" class="img-fluid mb-2">
+                                <img src="{{ details.sprites.front_default }}" alt="Front" class="img-fluid mb-2 detail-sprite">
                             {% endif %}
                         </div>
                     </div>
@@ -72,7 +73,7 @@
                         </div>
                         <div class="card-body">
                             {% for type in details.types %}
-                                <span class="badge bg-primary me-2 mb-2 type-badge-large">
+                                <span class="type-badge-large" data-type="{{ type.name|lower }}">
                                     {{ type.name|title }}
                                 </span>
                             {% endfor %}
@@ -86,7 +87,7 @@
                         </div>
                         <div class="card-body">
                             {% for ability in details.abilities %}
-                                <span class="badge {% if ability.is_hidden %}bg-secondary{% else %}bg-success{% endif %} me-2 mb-2">
+                                <span class="ability-badge-large {% if ability.is_hidden %}hidden{% else %}normal{% endif %}">
                                     {{ ability.name|title }}
                                     {% if ability.is_hidden %} (Hidden){% endif %}
                                 </span>
@@ -122,7 +123,7 @@
                 </div>
             </div>
 
-            <!-- Evololution Chain -->
+            <!-- Evolution Chain -->
             {% if details.evolution_chain.evolutions %}
             <div class="card mb-4">
                 <div class="card-header">
@@ -174,5 +175,4 @@
         </a>
     </div>
 </div>
-
 {% endblock %}
