@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Q
+
+from pokemon.forms import PokemonComparisonForm
 from .models import Pokemon, PokemonType, PokemonAbility
 from .services.pokemon_service import get_pokemon_details, get_pokemon_comparison
 import logging
@@ -8,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def pokemon(request):
+    """View to display list of pokemons"""
     try:
         page_number = int(request.GET.get("page", 1))
         pokemon_type = request.GET.get("type", "").strip().lower()
@@ -77,6 +80,7 @@ def pokemon(request):
 
 
 def pokemon_detail(request, pokemon_id):
+    """View to display details of pokemon"""
     try:
         pokemon_details = get_pokemon_details(pokemon_id)
 
@@ -101,62 +105,29 @@ def pokemon_detail(request, pokemon_id):
             {"error": "An error occurred while loading Pokémon details."},
         )
 
+
 def pokemon_comparison(request):
-    """Bezpečné porovnanie pokémonov s proper validation"""
-    try:
-        p1_id = request.GET.get("pokemon1")
-        p2_id = request.GET.get("pokemon2")
+    """View to compare two Pokemon - Django Forms"""
+    form = PokemonComparisonForm(request.GET)
 
-        if not p1_id or not p2_id:
-            logger.warning("Missing pokemon parameters in comparison request")
-            return render(
-                request,
-                "pokemon/error.html",
-                {"error": "Missing pokemon parameters for comparison."},
-            )
-
-        try:
-            p1_id = int(p1_id)
-            p2_id = int(p2_id)
-
-            if not (1 <= p1_id <= 151) or not (1 <= p2_id <= 151):
-                logger.warning(f"Invalid pokemon IDs: {p1_id}, {p2_id}")
-                return render(
-                    request,
-                    "pokemon/error.html",
-                    {"error": "Pokemon IDs must be between 1 and 151."},
-                )
-
-            if p1_id == p2_id:
-                return render(
-                    request,
-                    "pokemon/error.html",
-                    {"error": "Cannot compare the same Pokémon."},
-                )
-
-        except (ValueError, TypeError) as e:
-            logger.warning(f"Invalid pokemon ID format: {e}")
-            return render(
-                request,
-                "pokemon/error.html",
-                {"error": "Invalid pokemon IDs provided."},
-            )
-
-        data = get_pokemon_comparison(p1_id, p2_id)
-
-        if data.get("error"):
-            logger.error(f"Comparison service error for {p1_id} vs {p2_id}")
-            return render(
-                request,
-                "pokemon/error.html",
-                {"error": "Could not compare these Pokémon."},
-            )
-
-        logger.info(f"Successful comparison: {p1_id} vs {p2_id}")
-        return render(request, "pokemon/comparison.html", data)
-
-    except Exception as e:
-        logger.error(f"Unexpected error in comparison view: {e}")
-        return render(
-            request, "pokemon/error.html", {"error": "An unexpected error occurred."}
+    if not form.is_valid():
+        error_msg = (
+            next(iter(form.errors.values()))[0]
+            if form.errors
+            else "Invalid comparison parameters."
         )
+        return render(request, "pokemon/error.html", {"error": error_msg})
+
+    p1_id = form.cleaned_data["pokemon1"]
+    p2_id = form.cleaned_data["pokemon2"]
+
+    data = get_pokemon_comparison(p1_id, p2_id)
+
+    if data.get("error"):
+        return render(
+            request,
+            "pokemon/error.html",
+            {"error": "Could not compare these Pokémon."},
+        )
+
+    return render(request, "pokemon/comparison.html", data)
