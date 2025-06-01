@@ -4,13 +4,12 @@
 
 {% block content %}
 <div class="container">
-    <!-- Header s load indikátorom -->
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="mb-0">{{ details.basic_info.name|title }}</h1>
             <p class="text-muted mb-0">#{{ details.basic_info.id }}</p>
         </div>
-    
     </div>
     
     <!-- Breadcrumb -->
@@ -97,32 +96,82 @@
                 </div>
             </div>
             
-        <!-- Base Stats -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Base Stats</h5>
-            </div>
-            <div class="card-body">
-                {% for stat in details.stats %}
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <strong>{{ stat.name|title }}:</strong>
-                        </div>
-                        <div class="col-8">
-                            <div class="progress position-relative">
-                                <div class="progress-bar bg-primary" style="width: {% widthratio stat.base_stat 255 100 %}%">
-                                    <span class="progress-text">{{ stat.base_stat }}</span>
+            <!-- Base Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Base Stats</h5>
+                </div>
+                <div class="card-body">
+                    {% for stat in details.stats %}
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <strong>{{ stat.name|title }}:</strong>
+                            </div>
+                            <div class="col-8">
+                                <div class="progress position-relative">
+                                    <div class="progress-bar bg-primary" style="width: {% widthratio stat.base_stat 255 100 %}%">
+                                        <span class="progress-text">{{ stat.base_stat }}</span>
+                                    </div>
+                                    {% if stat.effort > 0 %}
+                                        <span class="ev-badge">+{{ stat.effort }} EV</span>
+                                    {% endif %}
                                 </div>
-                                {% if stat.effort > 0 %}
-                                    <span class="ev-badge">+{{ stat.effort }} EV</span>
-                                {% endif %}
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
+
+            <!-- Evololution Chain -->
+            {% if details.evolution_chain.evolutions %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-arrow-right me-2"></i>Evolution Chain
+                        <span class="badge bg-info ms-2">{{ details.evolution_chain.total_stages }} stage{% if details.evolution_chain.total_stages > 1 %}s{% endif %}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="evolution-chain">
+                        {% for evolution in details.evolution_chain.evolutions %}
+                            <div class="evolution-pokemon">
+                                <div class="evolution-stage-badge">Stage {{ evolution.stage }}</div>
+                                <div class="evolution-image">
+                                    {% if evolution.image_url %}
+                                        <img src="{{ evolution.image_url }}" alt="{{ evolution.name }}" class="evolution-sprite">
+                                    {% else %}
+                                        <div class="no-image">No image</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="evolution-info">
+                                    <h6 class="evolution-name">
+                                        <a href="{% url 'pokemon:pokemon_detail' evolution.id %}" target="_blank" class="text-decoration-none">
+                                            {{ evolution.name|title }}
+                                        </a>
+                                    </h6>
+                                    <small class="text-muted">#{{ evolution.id }}</small>
+                                </div>
+                            </div>
+                            
+                            {% if not forloop.last %}
+                                <div class="evolution-arrow">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
-        </div>
+    </div>
+
+    <!-- Back button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'pokemon:pokemon' %}" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Pokédex
+        </a>
     </div>
 </div>
 
@@ -149,5 +198,94 @@
     max-width: 96px;
     max-height: 96px;
 }
+
+/* Evolution chain style */
+.evolution-chain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 20px 0;
+}
+
+.evolution-pokemon {
+    text-align: center;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: #f8f9fa;
+    min-width: 130px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.evolution-pokemon:hover {
+    border-color: #0d6efd;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+}
+
+.evolution-stage-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #6c757d;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.evolution-image {
+    margin-bottom: 10px;
+}
+
+.evolution-sprite {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.no-image {
+    width: 80px;
+    height: 80px;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin: 0 auto;
+}
+
+.evolution-name a {
+    color: #212529;
+    font-weight: 600;
+}
+
+.evolution-name a:hover {
+    color: #0d6efd;
+}
+
+.evolution-arrow {
+    color: #6c757d;
+    font-size: 1.5rem;
+}
+
+/* Color stage badges  */
+.evolution-pokemon:nth-child(1) .evolution-stage-badge { 
+    background: #28a745; /* for 1. stage */
+}
+.evolution-pokemon:nth-child(3) .evolution-stage-badge { 
+    background: #ffc107; 
+    color: #000; /* for 2. stage */
+}
+.evolution-pokemon:nth-child(5) .evolution-stage-badge { 
+    background: #dc3545; /* for 3. stage */
+}
+
 </style>
 {% endblock %}
