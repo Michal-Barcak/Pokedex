@@ -68,7 +68,7 @@ The application provides a web interface for:
 
 - Evolution Chains: View evolution trees in detail pages
 
-## Navigation
+### Navigation
 - Home: / - Main Pokémon list
 
 - Detail: /pokemon/{id}/ - Individual Pokémon details
