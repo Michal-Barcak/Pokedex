@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -66,32 +67,56 @@
             <div class="card">
                 <div class="card-header">{{ pokemon1.basic_info.name|title }}</div>
                 <div class="card-body">
-                    <p><strong>Height:</strong> {{ pokemon1.basic_info.height }}m</p>
-                    <p><strong>Weight:</strong> {{ pokemon1.basic_info.weight }}kg</p>
-                    <p><strong>Base Experience:</strong> {{ pokemon1.basic_info.base_experience }}</p>
-                    <p><strong>Capture Rate:</strong> {{ pokemon1.species_info.capture_rate }}</p>
-                    <p><strong>Habitat:</strong> {{ pokemon1.species_info.habitat|default:"Unknown" }}</p>
-                    <p><strong>Types:</strong> 
-                        {% for type in pokemon1.types %}
-                            <span class="badge bg-primary">{{ type.name|title }}</span>
-                        {% endfor %}
-                    </p>
-                    <p><strong>Abilities:</strong>
-                        {% for ability in pokemon1.abilities %}
-                            {% if not ability.is_hidden %}
-                                <span class="badge bg-secondary">{{ ability.name|title }}</span>
-                            {% endif %}
-                        {% endfor %}
-                    </p>
-                    <p><strong>Hidden Abilities:</strong>
-                        {% for ability in pokemon1.abilities %}
-                            {% if ability.is_hidden %}
-                                <span class="badge bg-dark">{{ ability.name|title }}</span>
-                            {% endif %}
-                        {% empty %}
-                            <span class="text-muted">None</span>
-                        {% endfor %}
-                    </p>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Height:</span>
+                        <span class="comparison-info-content">{{ pokemon1.basic_info.height }}m</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Weight:</span>
+                        <span class="comparison-info-content">{{ pokemon1.basic_info.weight }}kg</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Base Experience:</span>
+                        <span class="comparison-info-content">{{ pokemon1.basic_info.base_experience }}</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Capture Rate:</span>
+                        <span class="comparison-info-content">{{ pokemon1.species_info.capture_rate }}</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Habitat:</span>
+                        <span class="comparison-info-content">{{ pokemon1.species_info.habitat|default:"Unknown" }}</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Types:</span>
+                        <div class="comparison-info-content">
+                            {% for type in pokemon1.types %}
+                                <span class="type-badge-large" data-type="{{ type.name|lower }}">{{ type.name|title }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Abilities:</span>
+                        <div class="comparison-info-content">
+                            {% for ability in pokemon1.abilities %}
+                                {% if not ability.is_hidden %}
+                                    <span class="ability-badge-large normal">{{ ability.name|title }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Hidden Abilities:</span>
+                        <div class="comparison-info-content">
+                            {% for ability in pokemon1.abilities %}
+                                {% if ability.is_hidden %}
+                                    <span class="ability-badge-large hidden">{{ ability.name|title }}</span>
+                                {% endif %}
+                            {% empty %}
+                                <span class="text-muted">None</span>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,32 +124,56 @@
             <div class="card">
                 <div class="card-header">{{ pokemon2.basic_info.name|title }}</div>
                 <div class="card-body">
-                    <p><strong>Height:</strong> {{ pokemon2.basic_info.height }}m</p>
-                    <p><strong>Weight:</strong> {{ pokemon2.basic_info.weight }}kg</p>
-                    <p><strong>Base Experience:</strong> {{ pokemon2.basic_info.base_experience }}</p>
-                    <p><strong>Capture Rate:</strong> {{ pokemon2.species_info.capture_rate }}</p>
-                    <p><strong>Habitat:</strong> {{ pokemon2.species_info.habitat|default:"Unknown" }}</p>
-                    <p><strong>Types:</strong> 
-                        {% for type in pokemon2.types %}
-                            <span class="badge bg-primary">{{ type.name|title }}</span>
-                        {% endfor %}
-                    </p>
-                    <p><strong>Abilities:</strong>
-                        {% for ability in pokemon2.abilities %}
-                            {% if not ability.is_hidden %}
-                                <span class="badge bg-secondary">{{ ability.name|title }}</span>
-                            {% endif %}
-                        {% endfor %}
-                    </p>
-                    <p><strong>Hidden Abilities:</strong>
-                        {% for ability in pokemon2.abilities %}
-                            {% if ability.is_hidden %}
-                                <span class="badge bg-dark">{{ ability.name|title }}</span>
-                            {% endif %}
-                        {% empty %}
-                            <span class="text-muted">None</span>
-                        {% endfor %}
-                    </p>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Height:</span>
+                        <span class="comparison-info-content">{{ pokemon2.basic_info.height }}m</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Weight:</span>
+                        <span class="comparison-info-content">{{ pokemon2.basic_info.weight }}kg</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Base Experience:</span>
+                        <span class="comparison-info-content">{{ pokemon2.basic_info.base_experience }}</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Capture Rate:</span>
+                        <span class="comparison-info-content">{{ pokemon2.species_info.capture_rate }}</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Habitat:</span>
+                        <span class="comparison-info-content">{{ pokemon2.species_info.habitat|default:"Unknown" }}</span>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Types:</span>
+                        <div class="comparison-info-content">
+                            {% for type in pokemon2.types %}
+                                <span class="type-badge-large" data-type="{{ type.name|lower }}">{{ type.name|title }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Abilities:</span>
+                        <div class="comparison-info-content">
+                            {% for ability in pokemon2.abilities %}
+                                {% if not ability.is_hidden %}
+                                    <span class="ability-badge-large normal">{{ ability.name|title }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="comparison-info-row">
+                        <span class="comparison-info-label">Hidden Abilities:</span>
+                        <div class="comparison-info-content">
+                            {% for ability in pokemon2.abilities %}
+                                {% if ability.is_hidden %}
+                                    <span class="ability-badge-large hidden">{{ ability.name|title }}</span>
+                                {% endif %}
+                            {% empty %}
+                                <span class="text-muted">None</span>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -134,5 +183,4 @@
         <a href="{% url 'pokemon:pokemon' %}" class="btn btn-primary">Back to Pokédex</a>
     </div>
 </div>
-
 {% endblock %}

@@ -1,0 +1,204 @@
+/* =================================
+   BASE & COMMON STYLES
+   ================================= */
+
+.pokemon-sprite { max-width: 64px; max-height: 64px; }
+.navbar-brand { font-size: 1.5rem; }
+
+/* =================================
+   FILTERS
+   ================================= */
+
+.filter-container {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-group { display: flex; flex-direction: column; min-width: 140px; }
+
+.filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-select {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    padding: 6px 12px;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+}
+
+.clear-btn {
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+/* =================================
+   TABLE
+   ================================= */
+
+.table th, .table td { vertical-align: middle; padding: 12px 8px; }
+.table th { text-align: center; font-weight: 600; }
+.table th:nth-child(5), .table td:nth-child(5) { text-align: left; padding-left: 15px; }
+.table-responsive { width: 100%; overflow-x: auto; }
+.table { width: 100%; min-width: 800px; }
+
+/* =================================
+   TYPE BADGES
+   ================================= */
+
+.badge-type, .type-badge-large {
+    font-weight: 500;
+    text-transform: capitalize;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    text-align: center;
+    border-radius: 12px;
+    color: white;
+}
+
+.badge-type { font-size: 0.75rem; padding: 6px 10px; width: 70px; min-width: 70px; }
+.type-badge-large { font-size: 0.9rem; padding: 8px 12px; min-width: 80px; }
+
+/* TYPE COLORS */
+.badge-type[data-type="grass"], .type-badge-large[data-type="grass"] { background-color: #78C850; }
+.badge-type[data-type="poison"], .type-badge-large[data-type="poison"] { background-color: #A040A0; }
+.badge-type[data-type="fire"], .type-badge-large[data-type="fire"] { background-color: #F08030; }
+.badge-type[data-type="flying"], .type-badge-large[data-type="flying"] { background-color: #A890F0; }
+.badge-type[data-type="water"], .type-badge-large[data-type="water"] { background-color: #6890F0; }
+.badge-type[data-type="bug"], .type-badge-large[data-type="bug"] { background-color: #A8B820; }
+.badge-type[data-type="normal"], .type-badge-large[data-type="normal"] { background-color: #A8A878; }
+.badge-type[data-type="electric"], .type-badge-large[data-type="electric"] { background-color: #F8D030; color: black; }
+.badge-type[data-type="ground"], .type-badge-large[data-type="ground"] { background-color: #E0C068; color: black; }
+.badge-type[data-type="fairy"], .type-badge-large[data-type="fairy"] { background-color: #EE99AC; }
+.badge-type[data-type="fighting"], .type-badge-large[data-type="fighting"] { background-color: #C03028; }
+.badge-type[data-type="psychic"], .type-badge-large[data-type="psychic"] { background-color: #F85888; }
+.badge-type[data-type="rock"], .type-badge-large[data-type="rock"] { background-color: #B8A038; }
+.badge-type[data-type="steel"], .type-badge-large[data-type="steel"] { background-color: #B8B8D0; color: black; }
+.badge-type[data-type="ice"], .type-badge-large[data-type="ice"] { background-color: #98D8D8; color: black; }
+.badge-type[data-type="ghost"], .type-badge-large[data-type="ghost"] { background-color: #705898; }
+.badge-type[data-type="dragon"], .type-badge-large[data-type="dragon"] { background-color: #7038F8; }
+.badge-type[data-type="dark"], .type-badge-large[data-type="dark"] { background-color: #705848; }
+
+/* =================================
+   ABILITY BADGES
+   ================================= */
+
+.badge-ability, .ability-badge-large {
+    color: white;
+    font-weight: 500;
+    border-radius: 12px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 4px;
+    margin-bottom: 2px;
+}
+
+.badge-ability { font-size: 0.75rem; padding: 4px 8px; width: 100px; min-width: 100px; }
+.ability-badge-large { font-size: 0.85rem; padding: 6px 12px; min-width: 120px; }
+
+.badge-ability.primary, .ability-badge-large.normal { background-color: #0d6efd; }
+.badge-ability.secondary { background-color: #6c757d; }
+.badge-ability.hidden, .ability-badge-large.hidden { background-color: #dc3545; position: relative; }
+.badge-ability.hidden::after { content: "🔒"; font-size: 0.6rem; margin-left: 2px; }
+.ability-badge-large.hidden::after { content: " 🔒"; font-size: 0.7rem; }
+
+/* =================================
+   COMPARE BUTTONS
+   ================================= */
+
+.compare-buttons-container { animation: slideUp 0.3s ease-out; bottom: 70px !important; }
+@keyframes slideUp { from { transform: translate(-50%, 100%); } to { transform: translate(-50%, 0); } }
+
+/* =================================
+   EVOLUTION CHAIN
+   ================================= */
+
+.evolution-chain { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 20px 0; }
+
+.evolution-pokemon {
+    text-align: center;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: #f8f9fa;
+    min-width: 130px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.evolution-pokemon:hover {
+    border-color: #0d6efd;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+}
+
+.evolution-stage-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #6c757d;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.evolution-sprite { width: 80px; height: 80px; object-fit: contain; }
+
+.no-image {
+    width: 80px;
+    height: 80px;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin: 0 auto;
+}
+
+.evolution-name a { color: #212529; font-weight: 600; }
+.evolution-name a:hover { color: #0d6efd; }
+.evolution-arrow { color: #6c757d; font-size: 1.5rem; }
+
+.evolution-pokemon:nth-child(1) .evolution-stage-badge { background: #28a745; }
+.evolution-pokemon:nth-child(3) .evolution-stage-badge { background: #ffc107; color: #000; }
+.evolution-pokemon:nth-child(5) .evolution-stage-badge { background: #dc3545; }
+
+/* =================================
+   COMPARISON ALIGNMENT
+   ================================= */
+
+.comparison-info-row { display: flex; align-items: baseline; margin-bottom: 8px; }
+.comparison-info-label { font-weight: bold; min-width: 120px; flex-shrink: 0; }
+.comparison-info-content { flex: 1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.comparison-info-content .ability-badge-large, .comparison-info-content .type-badge-large { margin-bottom: 0; vertical-align: baseline; }
+
+
+
