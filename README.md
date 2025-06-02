@@ -112,7 +112,7 @@ The application provides a web interface for:
 11. Paldea Region (Generation IX)
 
     - `python manage.py sync_pokemon --start 899 --limit 112`
-    Pokemon #899-1010
+    - Pokemon #899-1010
 
 # # # Speed Control Commands
 12. Ultra-fast download
