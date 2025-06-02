@@ -8,17 +8,17 @@ from typing import Dict, Any
 logger = logging.getLogger(__name__)
 
 
-def get_pokemon_details(pokemon_id: int) -> Dict[str, Any]:
-    """Get pokemon details by id"""
-    cache_key = f"pokemon_details_{pokemon_id}"
+def get_pokemon_details(pokemon_api_id: int) -> Dict[str, Any]:
+    """Get pokemon details by API ID (not DB ID)"""
+    cache_key = f"pokemon_details_{pokemon_api_id}"
     result = cache.get(cache_key)
 
     if result:
         return result
 
     try:
-        pokemon = get_object_or_404(Pokemon, api_id=pokemon_id)
-        species = pb.pokemon_species(pokemon_id)
+        pokemon = get_object_or_404(Pokemon, api_id=pokemon_api_id)
+        species = pb.pokemon_species(pokemon_api_id)
 
         evolution_data = get_evolution_chain(species.evolution_chain.id)
 
@@ -54,7 +54,7 @@ def get_pokemon_details(pokemon_id: int) -> Dict[str, Any]:
         return result
 
     except Exception as e:
-        logger.error(f"Error: {e}")
+        logger.error(f"Error getting Pokemon API ID {pokemon_api_id}: {e}")
         return {"error": True, "message": str(e)}
 
 
@@ -73,19 +73,21 @@ def get_evolution_chain(evolution_chain_id: int) -> Dict[str, Any]:
 
         def process_chain(chain_node, stage=1):
             species_name = chain_node.species.name
-            species_id = int(chain_node.species.url.split("/")[-2])
+            species_api_id = int(chain_node.species.url.split("/")[-2])
 
             try:
-                pokemon_db = Pokemon.objects.get(api_id=species_id)
+                pokemon_db = Pokemon.objects.get(api_id=species_api_id)
                 image_url = pokemon_db.sprite_url
-                print(image_url)
             except Pokemon.DoesNotExist:
-                pokemon_api = pb.pokemon(species_id)
-                image_url = pokemon_api.sprites.front_default or ""
+                try:
+                    pokemon_api = pb.pokemon(species_api_id)
+                    image_url = pokemon_api.sprites.front_default or ""
+                except Exception:
+                    image_url = ""
 
             evolution_list.append(
                 {
-                    "id": species_id,
+                    "id": species_api_id,
                     "name": species_name,
                     "image_url": image_url,
                     "stage": stage,
@@ -115,19 +117,20 @@ def get_evolution_chain(evolution_chain_id: int) -> Dict[str, Any]:
         return {"evolutions": [], "total_stages": 1}
 
 
-def get_pokemon_comparison(pokemon1_id: int, pokemon2_id: int) -> Dict[str, Any]:
-    """Compare two pokemon by their ids"""
-    cache_key = f"compare_{pokemon1_id}_{pokemon2_id}"
+def get_pokemon_comparison(pokemon1_api_id: int, pokemon2_api_id: int) -> Dict[str, Any]:
+    """Compare two pokemon by their API IDs"""
+    cache_key = f"compare_{pokemon1_api_id}_{pokemon2_api_id}"
     cached = cache.get(cache_key)
 
     if cached:
         return cached
 
     try:
-        p1 = get_pokemon_details(pokemon1_id)
-        p2 = get_pokemon_details(pokemon2_id)
+        p1 = get_pokemon_details(pokemon1_api_id)
+        p2 = get_pokemon_details(pokemon2_api_id)
 
         if p1.get("error") or p2.get("error"):
+            logger.error(f"Error comparing Pokemon API IDs {pokemon1_api_id} vs {pokemon2_api_id}")
             return {"error": True}
 
         result = {
@@ -139,5 +142,5 @@ def get_pokemon_comparison(pokemon1_id: int, pokemon2_id: int) -> Dict[str, Any]
         return result
 
     except Exception as e:
-        logger.error(f"Comparison error: {e}")
+        logger.error(f"Comparison error for API IDs {pokemon1_api_id} vs {pokemon2_api_id}: {e}")
         return {"error": True}

@@ -1,11 +1,3 @@
-# from django.apps import AppConfig
-
-
-# class PokemonConfig(AppConfig):
-#     default_auto_field = "django.db.models.BigAutoField"
-#     name = "pokemon"
-
-
 from django.apps import AppConfig
 import logging
 import sys
@@ -27,6 +19,7 @@ class PokemonConfig(AppConfig):
             "collectstatic",
             "check",
             "showmigrations",
+            "sync_pokemon",
         ]:
             return
 
@@ -36,14 +29,34 @@ class PokemonConfig(AppConfig):
 
                 pokemon_count = Pokemon.objects.count()
 
-                if pokemon_count < 151:
-                    logger.info("🔄 Starting automatic pokemon sync...")
-                    from django.core.management import call_command
-
-                    call_command("sync_pokemon", limit=151)
-                    logger.info("✅ Automatic sync done")
+                if pokemon_count == 0:
+                    logger.info("🔄 No Pokemon found. Starting sync for all Pokemon...")
+                    self.start_full_sync()
                 else:
-                    logger.info(f"ℹ️ Database contains {pokemon_count} pokemons")
+                    logger.info(f"ℹ️ Database contains {pokemon_count} Pokemon")
+                    logger.info("💡 Use 'python manage.py sync_pokemon' to add more Pokemon")
 
             except Exception as e:
-                logger.warning(f"⚠️ Can not run sync: {e}")
+                logger.warning(f"⚠️ Cannot check Pokemon count: {e}")
+
+    def start_full_sync(self):
+        """Spustí sync pre všetkých 1010 Pokémonov"""
+        try:
+            from django.core.management import call_command
+            
+            print("\n" + "="*60)
+            print("🎮 WELCOME TO POKEMON DATABASE SETUP!")
+            print("="*60)
+            print("Your database is empty. Starting download of ALL Pokemon!")
+            print("This will download all 1010 Pokemon from all generations.")
+            print("="*60)
+            
+            choice = input("🚀 Start downloading all Pokemon? (Y/n): ").strip().lower()
+            
+            if choice in ['', 'y', 'yes']:
+                call_command('sync_pokemon')
+            else:
+                print("💡 You can run 'python manage.py sync_pokemon' later to add Pokemon.")
+                
+        except Exception as e:
+            logger.error(f"Error in startup sync: {e}")

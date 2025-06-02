@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.db.models import Q
 
-from pokemon.forms import PokemonComparisonForm
+from pokemon.utils import get_first_form_error
 from .models import Pokemon, PokemonType, PokemonAbility
 from .services.pokemon_service import get_pokemon_details, get_pokemon_comparison
+from .forms import PokemonComparisonForm
 import logging
 
 logger = logging.getLogger(__name__)
@@ -79,16 +80,16 @@ def pokemon(request):
         return render(request, "pokemon/error.html", {"error": "An error occurred."})
 
 
-def pokemon_detail(request, pokemon_id):
+def pokemon_detail(request, pokemon_api_id):
     """View to display details of pokemon"""
     try:
-        pokemon_details = get_pokemon_details(pokemon_id)
+        pokemon_details = get_pokemon_details(pokemon_api_id)
 
         if pokemon_details.get("error"):
             return render(
                 request,
                 "pokemon/error.html",
-                {"error": f"Could not load details for Pokémon #{pokemon_id}"},
+                {"error": f"Could not load details for Pokémon #{pokemon_api_id}"},
             )
 
         context = {
@@ -107,27 +108,19 @@ def pokemon_detail(request, pokemon_id):
 
 
 def pokemon_comparison(request):
-    """View to compare two Pokemon - Django Forms"""
+    """View to compare two Pokemon"""
     form = PokemonComparisonForm(request.GET)
-
+    
     if not form.is_valid():
-        error_msg = (
-            next(iter(form.errors.values()))[0]
-            if form.errors
-            else "Invalid comparison parameters."
-        )
+        error_msg = get_first_form_error(form)
         return render(request, "pokemon/error.html", {"error": error_msg})
-
-    p1_id = form.cleaned_data["pokemon1"]
-    p2_id = form.cleaned_data["pokemon2"]
-
-    data = get_pokemon_comparison(p1_id, p2_id)
-
+    
+    p1_api_id = form.cleaned_data['pokemon1']
+    p2_api_id = form.cleaned_data['pokemon2']
+    
+    data = get_pokemon_comparison(p1_api_id, p2_api_id)
+    
     if data.get("error"):
-        return render(
-            request,
-            "pokemon/error.html",
-            {"error": "Could not compare these Pokémon."},
-        )
+        return render(request, "pokemon/error.html", {"error": "Could not compare these Pokémon."})
 
     return render(request, "pokemon/comparison.html", data)

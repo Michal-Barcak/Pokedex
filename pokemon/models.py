@@ -86,7 +86,7 @@ class PokemonAbility(models.Model):
 
     class Meta:
         db_table = "pokemon_ability"
-        unique_together = ["pokemon", "ability_name"]
+        unique_together = ["pokemon", "ability_name", "is_hidden"]
         ordering = ["slot"]
 
 
