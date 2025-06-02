@@ -4,7 +4,7 @@ Simple Django web application for browsing Pokémon with comparison and evolutio
 # # Description
 The application provides a web interface for:
 
-- Browsing all 151 Kanto Pokémon with pagination
+- Browsing all Pokémon with pagination
 
 - Filtering by type and abilities
 
