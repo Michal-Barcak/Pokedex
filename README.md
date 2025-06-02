@@ -47,7 +47,7 @@ The application provides a web interface for:
 
 6. Run the development server
     - `python manage.py runserver`
-     **Note:** Pokemon data will be automatically synchronized from PokeAPI on first run.
+    - **Note:** Pokemon data will be automatically synchronized from PokeAPI on first run.
 
 7. Manual sync pokemon from pokeapi
     - `python manage.py sync_pokemon`
@@ -59,7 +59,7 @@ The application provides a web interface for:
 
     - `python manage.py sync_pokemon`
     - Downloads all 1010 Pokemon (ID 1-1010)
-    - Uses default delay of 0.005s between requests
+    - Uses default delay of 0.001s between requests
     - Automatically skips existing Pokemon
 
 2. Download specific number of Pokemon
