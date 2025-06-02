@@ -1,5 +1,5 @@
 # Pokédex Django Application
-Simple Django web application for browsing Kanto region Pokémon with comparison and evolution features.
+Simple Django web application for browsing Pokémon with comparison and evolution features.
 
 # # Description
 The application provides a web interface for:
