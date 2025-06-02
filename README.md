@@ -1,7 +1,7 @@
 # Pokédex Django Application
 Simple Django web application for browsing Pokémon with comparison and evolution features.
 
-# # Description
+## Description
 The application provides a web interface for:
 
 - Browsing all Pokémon with pagination
@@ -16,13 +16,13 @@ The application provides a web interface for:
 
 
 
-# # Requirements
+## Requirements
 - Python 3.8+
 
 - Django 4.0+
 
 
-# #  Installation
+##  Installation
 
 ### Option 1: Local deployment (without Docker)
 
@@ -53,7 +53,7 @@ The application provides a web interface for:
     - `python manage.py sync_pokemon`
 
 
-# #  Basic Commands for download pokemons
+##  Basic Commands for download pokemons
 
 1. Download all Pokemon (default)
 
@@ -68,7 +68,7 @@ The application provides a web interface for:
     - Downloads first 151 Pokemon (Kanto region)
     - Starts from Pokemon #1
 
-# # # Regional Downloads
+### Regional Downloads
 3. Kanto Region (Generation I)
 
     - `python manage.py sync_pokemon --start 1 --limit 151`
@@ -114,23 +114,23 @@ The application provides a web interface for:
     - `python manage.py sync_pokemon --start 899 --limit 112`
     - Pokemon #899-1010
 
-# # # Speed Control Commands
+### Speed Control Commands
 12. Ultra-fast download
 
     - `python manage.py sync_pokemon --delay 0.001`
     - Minimum delay (use with caution)
 
-# # # Advanced Combinations
+### Advanced Combinations
 13. Multiple regions at once
 
     - `python manage.py sync_pokemon --start 1 --limit 251`
     - Multiple regions at once (Kanto + Johto)
 
-# # # Clear database
+### Clear database
 14. Clear database from pokemons
     - `python manage.py flush`
 
-# # # Command Parameters
+### Command Parameters
 Parameter	Type	Default	Description
 --limit	    Integer	1010	Number of Pokemon to download
 --start	    Integer	1	    Starting Pokemon ID
