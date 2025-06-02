@@ -1,13 +1,13 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Pokédex - Kanto{% endblock %}
+{% block title %}Pokédex{% endblock %}
 
 {% block content %}
 <div class="container">
     <!-- Moderný header s kompaktnými filtrami -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Kanto Pokédex</h1>
+        <h1 class="mb-0">Pokédex</h1>
         
         <!-- Kompaktné filtre -->
         <div class="filter-container">
@@ -83,7 +83,7 @@
                         <td class="text-center">
                             <input type="checkbox" 
                                 class="pokemon-compare-checkbox" 
-                                data-pokemon-id="{{ pokemon.id }}"
+                                data-pokemon-id="{{ pokemon.api_id }}"
                                 data-pokemon-name="{{ pokemon.name }}"
                                 onchange="togglePokemonSelection(this)">
                         </td>
@@ -217,7 +217,7 @@
         <!-- Page information -->
         <div class="text-center text-muted mt-3">
             <small>
-                20 pokémon per page | Total {{ total_pages }} pages for Kanto region (1-151)
+                20 pokémon per page | Total {{ total_pages }} pages for all regions (1-1010)
             </small>
         </div>
     {% endif %}
