@@ -120,13 +120,15 @@ The application provides a web interface for:
     - `python manage.py sync_pokemon --delay 0.001`
     - Minimum delay (use with caution)
 
-
 # # # Advanced Combinations
 13. Multiple regions at once
 
     - `python manage.py sync_pokemon --start 1 --limit 251`
     - Multiple regions at once (Kanto + Johto)
 
+# # # Clear database
+14. Clear database from pokemons
+    - `python manage.py flush`
 
 # # # Command Parameters
 Parameter	Type	Default	Description
