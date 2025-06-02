@@ -120,7 +120,6 @@ The application provides a web interface for:
     - `python manage.py sync_pokemon --delay 0.001`
     - Minimum delay (use with caution)
 
-
 # # # Advanced Combinations
 13. Multiple regions at once
 
