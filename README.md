@@ -27,7 +27,7 @@ The application provides a web interface for:
 ### Option 1: Local deployment (without Docker)
 
 1. Clone the repository 
-    - `git clone https://github.com/PokeAPI/pokebase.git`
+    - `git clone https://github.com/Michal-Barcak/Pokedex.git`
     - `cd Pokedex`
 
 2. Create virtual environment
